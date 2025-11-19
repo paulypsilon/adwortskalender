@@ -30,7 +30,7 @@ jobs:
 
       - name: Bluesky-Posting ausführen
         env:
-          BSKY_USERNAME: ${{ secrets.BSKY_USERNAME }}
-          BSKY_PASSWORD: ${{ secrets.BSKY_PASSWORD }}
+          BSKY_USERNAME: ${{ secrets.BLUESKY_USER }}
+          BSKY_PASSWORD: ${{ secrets.BLUESKY_PASS }}
         run: |
           python main.py
