@@ -8,7 +8,7 @@ import os
 posts = {
     "2025-11-19": "Ahoi. Ab heute wird getestet. Es wird daher immer mal Skeets geben, die auch wieder verschwinden.",
     "2025-11-20": "Ahoi. Seit gestern wird getestet. Es wird daher immer mal Skeets geben, die auch wieder verschwinden.",
-    "2025-11-20": "Ahoi. Seit vorgestern wird getestet. Es wird daher immer mal Skeets geben, die auch wieder verschwinden.",
+    "2025-11-21": "Ahoi. Seit vorgestern wird getestet. Es wird daher immer mal Skeets geben, die auch wieder verschwinden.",
     "2025-11-22": "Die Idee stammt übrigens von meiner Frau. Die hat mir vor Jahren so einen Adventskalender auf Papier geschenkt.",
     "2025-11-23": "",
     "2025-11-24": "",
