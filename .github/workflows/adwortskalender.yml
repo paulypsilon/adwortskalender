@@ -1,8 +1,8 @@
-name: Daily Bluesky Post
+name: adwortskalender
 
 on:
   schedule:
-    - cron: "0 5 * * *"   # täglicher Lauf um 05:00 UTC
+    - cron: "0 5 * * *"
   workflow_dispatch:
 
 jobs:
@@ -20,16 +20,17 @@ jobs:
 
       - name: Abhängigkeiten installieren
         run: |
-          pip install atproto
+          pip install "atproto>=0.0.42"
+
+      - name: Debug python
+        run: |
+          python --version
+          pip list
+          ls -al
 
       - name: Bluesky-Posting ausführen
         env:
           BSKY_USERNAME: ${{ secrets.BSKY_USERNAME }}
           BSKY_PASSWORD: ${{ secrets.BSKY_PASSWORD }}
-
-      - name: Debug python
         run: |
-          python --version
-          ls -al
-        run: |
-          python main.py || true
+          python main.py
