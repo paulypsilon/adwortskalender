@@ -62,6 +62,9 @@ if not text:
 # -------------------------------
 # 3) Bluesky-Login
 # -------------------------------
+USERNAME = os.getenv("BSKY_USERNAME")
+PASSWORD = os.getenv("BSKY_PASSWORD")
+
 print("USERNAME:", USERNAME)
 print("PASSWORD gesetzt:", PASSWORD is not None)
 
