@@ -62,14 +62,16 @@ if not text:
 # -------------------------------
 # 3) Bluesky-Login
 # -------------------------------
-USERNAME = os.getenv("BSKY_USERNAME")
-PASSWORD = os.getenv("BSKY_PASSWORD")
+print("USERNAME:", USERNAME)
+print("PASSWORD gesetzt:", PASSWORD is not None)
 
-if not USERNAME or not PASSWORD:
-    raise ValueError("Umgebungsvariablen BSKY_USERNAME und BSKY_PASSWORD müssen gesetzt sein.")
-
-client = Client()
-client.login(USERNAME, PASSWORD)
+try:
+    client = Client()
+    client.login(USERNAME, PASSWORD)
+except Exception as e:
+    print("LOGIN FEHLER:")
+    print(type(e), e)
+    raise
 
 # -------------------------------
 # 4) Post absenden
