@@ -26,5 +26,10 @@ jobs:
         env:
           BSKY_USERNAME: ${{ secrets.BSKY_USERNAME }}
           BSKY_PASSWORD: ${{ secrets.BSKY_PASSWORD }}
+
+      - name: Debug python
         run: |
-          python post_bluesky.py
+          python --version
+          ls -al
+        run: |
+          python main.py || true
