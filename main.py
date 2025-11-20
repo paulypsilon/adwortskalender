@@ -66,7 +66,13 @@ formatted_date = f"{day}.{month}.{year}"
 # -------------------------------
 # 3) Finaler Posttext
 # -------------------------------
-text = f"📅 {formatted_date}\n\n📖 {word}\n\n#adwortskalender\n"
+text = (
+    f"📅 {formatted_date}\n"
+    f"\n"
+    f"📖 {word}\n"
+    f"\n"
+    "#adwortskalender"
+)
 
 # -------------------------------
 # 4) Bluesky-Login
