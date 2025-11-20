@@ -7,15 +7,15 @@ import os
 # -------------------------------
 posts = {
     "2025-11-19": "Ahoi. Ab heute wird getestet. Es wird daher immer mal Skeets geben, die auch wieder verschwinden.",
-    "2025-11-20": "Moin. Seit gestern wird getestet. Es wird daher immer mal Skeets geben, die auch wieder verschwinden.",
+    "2025-11-20": "Testwort",
     "2025-11-21": "",
     "2025-11-22": "",
     "2025-11-23": "",
-    "2025-11-24": "Aloha. Die Idee stammt übrigens von meiner Frau. Die hat mir vor Jahren so einen Adventskalender auf Papier geschenkt.",
-    "2025-11-25": "Gude. Morgen gibt es einen Beispielpost, wie das ganze ab dem 1. Dezember aussieht.",
-    "2025-11-26": "Testwort",
-    "2025-11-27": "Bonjour. Es wird jeweils 8 Nomen, Verben und Adjektive geben.",
-    "2025-11-28": "Ab morgen gibt es bis zum 1. Dezember ein Beispiel aus meinem damaligen Kalender mit dem von mir verwendeten Satz und dem Kontext.",
+    "2025-11-24": "",
+    "2025-11-25": "",
+    "2025-11-26": "",
+    "2025-11-27": "",
+    "2025-11-28": "",
     "2025-11-29": "",
     "2025-11-30": "",
     "2025-12-01": "florieren",
@@ -53,14 +53,23 @@ if today not in posts:
     print(f"Kein Eintrag für {today}.")
     exit(0)
 
-text = posts[today].strip()
+word = posts[today].strip()
 
-if not text:
+if not word:
     print(f"Eintrag für {today} ist leer – kein Post wird gesendet.")
     exit(0)
 
+# Datum formatiert: 2025-12-01 → 01.12.2025
+day, month, year = today[8:], today[5:7], today[0:4]
+formatted_date = f"{day}.{month}.{year}"
+
 # -------------------------------
-# 3) Bluesky-Login
+# 3) Finaler Posttext
+# -------------------------------
+text = f"📅 {formatted_date} #adwortskalender\n\n📖 {word}"
+
+# -------------------------------
+# 4) Bluesky-Login
 # -------------------------------
 USERNAME = os.getenv("BSKY_USERNAME")
 PASSWORD = os.getenv("BSKY_PASSWORD")
@@ -77,7 +86,7 @@ except Exception as e:
     raise
 
 # -------------------------------
-# 4) Post absenden
+# 5) Post absenden
 # -------------------------------
 client.send_post(text)
 
