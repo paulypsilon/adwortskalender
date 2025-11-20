@@ -1,5 +1,5 @@
 import datetime
-from atproto import Client
+from atproto import Client, models
 import os
 
 # -------------------------------
