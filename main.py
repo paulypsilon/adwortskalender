@@ -89,7 +89,9 @@ def make_post_with_hashtag(client, text, tag="adwortskalender"):
     if index != -1:
         facets.append(
             models.AppBskyRichtextFacet.Main(
-                features=[models.AppBskyRichtextFacet.FeatureTag(tag=tag)],
+                features=[
+                    models.AppBskyRichtextFacet.Tag(tag=tag)
+                ],
                 index=models.AppBskyRichtextFacet.ByteSlice(
                     start=index,
                     end=index + len(hashtag),
