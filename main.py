@@ -84,25 +84,31 @@ client.login(USERNAME, PASSWORD)
 # --------------------------------
 def make_post_with_hashtag(client, text, tag="adwortskalender"):
     hashtag = f"#{tag}"
-    index = text.find(hashtag)
+
+    # Byte-Offsets bestimmen
+    text_bytes = text.encode("utf-8")
+    hashtag_bytes = hashtag.encode("utf-8")
+
+    # Byte-Position finden
+    start = text_bytes.find(hashtag_bytes)
 
     facets = []
 
-    if index != -1:
+    if start != -1:
         facets.append(
             models.AppBskyRichtextFacet.Main(
                 features=[
                     models.AppBskyRichtextFacet.Tag(tag=tag)
                 ],
                 index=models.AppBskyRichtextFacet.ByteSlice(
-                    byteStart=index,
-                    byteEnd=index + len(hashtag),
+                    byteStart=start,
+                    byteEnd=start + len(hashtag_bytes),
                 ),
             )
         )
 
-    # RFC3339 / AT Protocol kompatible Zeit erzeugen
-    created_at = datetime.datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    # RFC3339 Zeit
+    created_at = datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z")
 
     return client.app.bsky.feed.post.create(
         repo=client.me.did,
@@ -112,7 +118,6 @@ def make_post_with_hashtag(client, text, tag="adwortskalender"):
             facets=facets,
         ),
     )
-
 # --------------------------------
 # 6) Post senden
 # --------------------------------
