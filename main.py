@@ -8,7 +8,7 @@ import os
 posts = {
     "2025-11-19": "Ahoi. Ab heute wird getestet. Es wird daher immer mal Skeets geben, die auch wieder verschwinden.",
     "2025-11-20": "Testwort",
-    "2025-11-21": "",
+    "2025-11-21": "Knebelsrod",
     "2025-11-22": "",
     "2025-11-23": "",
     "2025-11-24": "",
@@ -44,56 +44,73 @@ posts = {
     "2025-12-24": "Osterhase",
 }
 
-# -------------------------------
-# 2) Bestimme heutiges Datum
-# -------------------------------
+# --------------------------------
+# 2) Heutiges Datum
+# --------------------------------
 today = datetime.date.today().isoformat()
-
-if today not in posts:
-    print(f"Kein Eintrag für {today}.")
-    exit(0)
-
-word = posts[today].strip()
+word = posts.get(today, "").strip()
 
 if not word:
-    print(f"Eintrag für {today} ist leer – kein Post wird gesendet.")
+    print(f"Kein gültiger Eintrag für {today}.")
     exit(0)
 
-# Datum formatiert: 2025-12-01 → 01.12.2025
-day, month, year = today[8:], today[5:7], today[0:4]
-formatted_date = f"{day}.{month}.{year}"
+formatted_date = datetime.datetime.strptime(today, "%Y-%m-%d").strftime("%d.%m.%Y")
 
-# -------------------------------
-# 3) Finaler Posttext
-# -------------------------------
+# --------------------------------
+# 3) Text zusammensetzen
+# --------------------------------
 text = (
-    f"📅 {formatted_date}\n"
+    f"📅 {formatted_date} #adwortskalender\n"
     f"\n"
-    f"📖 {word}\n"
-    f"\n"
-    "#adwortskalender"
+    f"📖 {word}"
 )
 
-# -------------------------------
-# 4) Bluesky-Login
-# -------------------------------
+# --------------------------------
+# 4) Bluesky Login
+# --------------------------------
 USERNAME = os.getenv("BSKY_USERNAME")
 PASSWORD = os.getenv("BSKY_PASSWORD")
 
-print("USERNAME:", USERNAME)
-print("PASSWORD gesetzt:", PASSWORD is not None)
+if not USERNAME or not PASSWORD:
+    raise ValueError("Umgebungsvariablen BSKY_USERNAME und BSKY_PASSWORD müssen gesetzt sein.")
 
-try:
-    client = Client()
-    client.login(USERNAME, PASSWORD)
-except Exception as e:
-    print("LOGIN FEHLER:")
-    print(type(e), e)
-    raise
+client = Client()
+client.login(USERNAME, PASSWORD)
 
-# -------------------------------
-# 5) Post absenden
-# -------------------------------
-client.send_post(text)
 
-print(f"Gesendet: {text}")
+# --------------------------------
+# 5) Hashtag-Facets erzeugen
+# --------------------------------
+def make_post_with_hashtag(client, text, tag="adwortskalender"):
+    facets = []
+    hashtag = f"#{tag}"
+    index = text.find(hashtag)
+
+    if index != -1:
+        facets.append(
+            models.AppBskyRichtextFacet.Main(
+                features=[models.AppBskyRichtextFacet.FeatureTag(tag=tag)],
+                index=models.AppBskyRichtextFacet.ByteSlice(
+                    start=index,
+                    end=index + len(hashtag),
+                ),
+            )
+        )
+
+    return client.app.bsky.feed.post.create(
+        repo=client.me.did,
+        record=models.AppBskyFeedPost.Record(
+            text=text,
+            created_at=datetime.datetime.utcnow().isoformat(),
+            facets=facets,
+        ),
+    )
+
+
+# --------------------------------
+# 6) Post senden
+# --------------------------------
+make_post_with_hashtag(client, text)
+
+print("Gesendet:")
+print(text)
