@@ -93,8 +93,8 @@ def make_post_with_hashtag(client, text, tag="adwortskalender"):
                     models.AppBskyRichtextFacet.Tag(tag=tag)
                 ],
                 index=models.AppBskyRichtextFacet.ByteSlice(
-                    start=index,
-                    end=index + len(hashtag),
+                    byteStart=index,
+                    byteEnd=index + len(hashtag),
                 ),
             )
         )
@@ -107,7 +107,6 @@ def make_post_with_hashtag(client, text, tag="adwortskalender"):
             facets=facets,
         ),
     )
-
 
 # --------------------------------
 # 6) Post senden
