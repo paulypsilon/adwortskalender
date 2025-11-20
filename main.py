@@ -1,4 +1,5 @@
 import datetime
+from datetime import timezone
 from atproto import Client, models
 import os
 
@@ -45,7 +46,7 @@ posts = {
 }
 
 # --------------------------------
-# 2) Heutiges Datum
+# 2) Heutiges Datum prüfen
 # --------------------------------
 today = datetime.date.today().isoformat()
 word = posts.get(today, "").strip()
@@ -82,9 +83,10 @@ client.login(USERNAME, PASSWORD)
 # 5) Hashtag-Facets erzeugen
 # --------------------------------
 def make_post_with_hashtag(client, text, tag="adwortskalender"):
-    facets = []
     hashtag = f"#{tag}"
     index = text.find(hashtag)
+
+    facets = []
 
     if index != -1:
         facets.append(
@@ -99,11 +101,14 @@ def make_post_with_hashtag(client, text, tag="adwortskalender"):
             )
         )
 
+    # RFC3339 / AT Protocol kompatible Zeit erzeugen
+    created_at = datetime.datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
     return client.app.bsky.feed.post.create(
         repo=client.me.did,
         record=models.AppBskyFeedPost.Record(
             text=text,
-            created_at=datetime.datetime.utcnow().isoformat(),
+            created_at=created_at,
             facets=facets,
         ),
     )
